@@ -1,9 +1,11 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Created by wojtek on 07.01.18.
  */
-public class Answer {
+public class Answer implements Serializable {
     private User user;
     private String answer;
 

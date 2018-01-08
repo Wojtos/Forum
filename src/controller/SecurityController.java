@@ -51,9 +51,8 @@ public class SecurityController {
     public Boolean isItAdministrator() {
         return this.user instanceof Administrator;
     }
-    protected User getUser(){
-        return this.user;
-    }
+
+    protected User getUser(){ return this.user; }
 
 
 }

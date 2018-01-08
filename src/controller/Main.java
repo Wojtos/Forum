@@ -9,16 +9,16 @@ import view.*;
 public class Main {
 
     public static void main(String[] args) {
-        Forum forum = new Forum();
+        Forum forum = StorageController.loadForum();
         SecurityController securityController = new SecurityController(forum);
         Start start = new Start(securityController);
-        if (!start.startView()) Main.quit();
+        if (!start.startView()) Main.quit(forum);
         ForumController forumController = new ForumController(forum, securityController.getUser());
         Home home = new Home(forumController);
-        if (!home.HomeView()) Main.quit();
+        if (!home.HomeView()) Main.quit(forum);
     }
 
-    public static void quit() {
-
+    public static void quit(Forum forum) {
+        StorageController.saveForum(forum);
     }
 }

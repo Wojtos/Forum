@@ -1,11 +1,12 @@
 package model;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
  * Created by wojtek on 07.01.18.
  */
-public class Thread {
+public class Thread implements Serializable {
     private User user;
     private String name;
     private String description;

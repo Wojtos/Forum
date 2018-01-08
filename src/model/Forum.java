@@ -1,12 +1,13 @@
 package model;
 
 import java.util.LinkedList;
+import java.io.Serializable;
 import exception.BadLoginOrPasswordExcepetion;
 
 /**
  * Created by wojtek on 06.01.18.
  */
-public class Forum {
+public class Forum implements Serializable {
 
     private LinkedList<User> users;
     private LinkedList<Thread> threads;
