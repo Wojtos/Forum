@@ -22,6 +22,11 @@ public class User implements Serializable {
         return this.nick;
     }
 
+    public Boolean changePassword(String oldPassword, String newPassword) {
+        if (!this.password.equals(oldPassword)) return false;
+        this.password = newPassword;
+        return true;
+    }
 
 
 }

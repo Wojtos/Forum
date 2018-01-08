@@ -39,9 +39,13 @@ public class SecurityController {
 
     public Boolean logIn(String nick, String password) throws BadLoginOrPasswordExcepetion {
         User user = this.forum.getUserByNick(nick);
-        if (!user.logIn(password)) throw new BadLoginOrPasswordExcepetion();
+        if (user == null || !user.logIn(password)) throw new BadLoginOrPasswordExcepetion();
         else this.user = user;
         return true;
+    }
+
+    public Boolean changePassword(String oldPassword, String newPassword) {
+        return this.user.changePassword(oldPassword, newPassword);
     }
 
     public Boolean isLoggedIn() {
