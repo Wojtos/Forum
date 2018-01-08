@@ -36,10 +36,6 @@ public class ForumController {
         return true;
     }
 
-    public LinkedList<Thread> getAllThreads() {
-        return this.forum.getThreads();
-    }
-
     public int getNumberOfThreads() {
         return this.forum.getThreads().size();
     }

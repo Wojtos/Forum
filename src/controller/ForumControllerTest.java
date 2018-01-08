@@ -62,7 +62,7 @@ class ForumControllerTest {
     void getAllThreads() {
         assertTrue(forumController.addThread("nowy","kolor"));
         assertTrue(forumController.addThread("dajemy","tu"));
-        assertTrue(forumController.getAllThreads().size() == 2);
+        assertTrue(forumController.getNumberOfThreads() == 2);
         assertNotNull(forumController.getThread(1));
         assertTrue(forumController.currentThread.getName().equals("dajemy"));
 
