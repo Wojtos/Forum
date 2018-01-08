@@ -9,10 +9,12 @@ import exception.BadLoginOrPasswordExcepetion;
 public class Forum {
 
     private LinkedList<User> users;
+    private LinkedList<Thread> threads;
 
 
     public Forum() {
         users = new LinkedList<>();
+        threads = new LinkedList<>();
         Administrator admin = new Administrator("admin","admin");
         this.addUser(admin);
 
@@ -37,4 +39,31 @@ public class Forum {
          return this.users.add(newUser);
     }
 
+    public Boolean addThread(Thread thread) {
+        return this.threads.add(thread);
+    }
+
+    public Thread getThread(int number) throws IndexOutOfBoundsException{
+        return this.threads.get(number);
+    }
+
+    public Boolean deleteThread(int number) throws IndexOutOfBoundsException{
+        this.threads.remove(number);
+        return true;
+    }
+
+    public LinkedList<Thread> getThreads() {
+        return this.threads;
+    }
+
+    public void printForum() {
+        System.out.println("Oto zawartość forum!");
+        int counter = 0;
+        for (Thread thread : threads) {
+            System.out.println("Wątek nr." + counter );
+            thread.printThread();
+            counter++;
+        }
+        System.out.println("");
+    }
 }

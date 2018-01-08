@@ -12,28 +12,48 @@ import java.util.LinkedList;
  */
 public class SecurityController {
     private Forum forum;
+    private User user;
 
     public SecurityController(Forum forum) {
         this.forum = forum;
+        this.user = null;
     }
 
     public Boolean register(String nick, String password) {
         if (this.forum.isthisNickFree(nick)) {
-            User newUser = new User(nick, password);
-            return this.forum.addUser(newUser);
+            this.user = new User(nick, password);
+            return this.forum.addUser(this.user);
         } else {
             return false;
         }
     }
 
-    public User logIn(String nick, String password) throws BadLoginOrPasswordExcepetion {
-        User user = this.forum.getUserByNick(nick);
-        if (user instanceof Administrator) user = (Administrator) user;
-        if (!user.logIn(password)) throw new BadLoginOrPasswordExcepetion();
-        return user;
+    public Boolean registerAdministrator(String nick, String password) {
+        if (this.forum.isthisNickFree(nick)) {
+            Administrator newAdministrator = new Administrator(nick, password);
+            return this.forum.addUser(newAdministrator);
+        } else {
+            return false;
+        }
     }
 
-    public Boolean isLoggedIn(User user) {
-        return user.isLoggedIn();
+    public Boolean logIn(String nick, String password) throws BadLoginOrPasswordExcepetion {
+        User user = this.forum.getUserByNick(nick);
+        if (!user.logIn(password)) throw new BadLoginOrPasswordExcepetion();
+        else this.user = user;
+        return true;
     }
+
+    public Boolean isLoggedIn() {
+        return this.user != null;
+    }
+
+    public Boolean isItAdministrator() {
+        return this.user instanceof Administrator;
+    }
+    protected User getUser(){
+        return this.user;
+    }
+
+
 }

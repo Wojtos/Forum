@@ -23,9 +23,9 @@ class SecurityControllerTest {
     void logAdmin(){
         SecurityController sc = new SecurityController(new Forum());
         try {
-            User ad = sc.logIn("admin","admin");
-            assertTrue(ad.isLoggedIn());
-            assertTrue(ad instanceof Administrator);
+            assertTrue(sc.logIn("admin","admin"));
+            assertTrue(sc.isLoggedIn());
+            assertTrue(sc.getUser() instanceof Administrator);
         } catch (BadLoginOrPasswordExcepetion e) {
             e.printStackTrace();
         }
@@ -36,9 +36,9 @@ class SecurityControllerTest {
         SecurityController sc = new SecurityController(new Forum());
         sc.register("a","b");
         try {
-            User user = sc.logIn("a","b");
-            assertTrue(user.isLoggedIn());
-            assertFalse(user instanceof Administrator);
+            assertTrue(sc.logIn("a","b"));
+            assertTrue(sc.isLoggedIn());
+            assertFalse(sc.getUser() instanceof Administrator);
 
         } catch (BadLoginOrPasswordExcepetion e) {
             e.printStackTrace();
@@ -50,9 +50,11 @@ class SecurityControllerTest {
         SecurityController sc = new SecurityController(new Forum());
         sc.register("a","b");
         try {
-            assertTrue(sc.logIn("admin","admin").getNick().equals("admin"));
-            assertTrue(sc.logIn("a","b").getNick().equals("a"));
-            assertNull(sc.logIn("a","bledne"));
+            assertTrue(sc.logIn("admin","admin"));
+            assertTrue(sc.getUser().getNick().equals("admin"));
+            assertTrue(sc.logIn("a","b"));
+            assertTrue(sc.getUser().getNick().equals("a"));
+            assertFalse(sc.logIn("a","bledne"));
         } catch (BadLoginOrPasswordExcepetion e) {
             e.printStackTrace();
         }
