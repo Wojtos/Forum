@@ -46,7 +46,7 @@ class ForumControllerTest {
 
     }
 
-    @Test
+    @Test()
     void deleteThread() {
         assertTrue(forumController.addThread("nowy","kolor"));
         assertNotNull(forumController.getThread(0));

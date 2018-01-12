@@ -37,6 +37,13 @@ public class SecurityController {
         }
     }
 
+    public Boolean changeUserPassword(String nick, String newPassword) throws BadLoginOrPasswordExcepetion {
+        Administrator admin = (Administrator)this.user;
+        User user = forum.getUserByNick(nick);
+        return admin.changeUserPassword(user, newPassword);
+
+    }
+
     public Boolean logIn(String nick, String password) throws BadLoginOrPasswordExcepetion {
         User user = this.forum.getUserByNick(nick);
         if (user == null || !user.logIn(password)) throw new BadLoginOrPasswordExcepetion();

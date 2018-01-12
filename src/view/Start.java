@@ -35,7 +35,7 @@ public class Start {
         do {
             System.out.println("Naciśnij L, aby się zalogować!");
             System.out.println("Naciśnij R, aby się zarejestrować!");
-            System.out.println("Naciśnij Q, aby się wyjść!");
+            System.out.println("Naciśnij Q, aby wyjść!");
 
             String inputChar;
             String nick;
@@ -75,8 +75,11 @@ public class Start {
             System.out.println("Jesteś administratorem!");
             boolean skip;
             do {
-                if (this.securityController.isItAdministrator())
+                if (this.securityController.isItAdministrator()) {
                     System.out.println("Naciśnij R, aby zarejestrować nowego administratora!");
+                    System.out.println("Naciśnij Z, aby zmienić hasło innemu użytkowinikowi!");
+
+                }
                 System.out.println("Naciśnij C, aby zmienić hasło!");
                 System.out.println("Naciśnij L, aby przejść dalej!");
                 System.out.println("Naciśnij Q, aby się wyjść!");
@@ -91,7 +94,7 @@ public class Start {
 
 
 
-
+                try {
                     inputChar = in.nextLine();
                     if (inputChar.equals("L") || inputChar.equals("l")) {
                         skip = true;
@@ -106,7 +109,15 @@ public class Start {
                         } else {
                             System.out.println("Nick zajęty!");
                         }
-                    }else if (inputChar.equals("C") || inputChar.equals("c")) {
+                    } else if (this.securityController.isItAdministrator() &&
+                            (inputChar.equals("Z") || inputChar.equals("z"))) {
+                        System.out.println("Wpisz nick użytkownika, któremu chesz zmienić hasło!");
+                        nick = in.nextLine();
+                        System.out.println("Wpisz nowe hasło!");
+                        password = in.nextLine();
+                        this.securityController.changeUserPassword(nick, password);
+                        System.out.println("Zmieniono!");
+                    } else if (inputChar.equals("C") || inputChar.equals("c")) {
                         System.out.println("Wpisz stare hasło!");
                         oldPassword = in.nextLine();
                         System.out.println("Wpisz nowe hasło!");
@@ -121,7 +132,9 @@ public class Start {
                     } else {
                         System.out.println("Wpisz odpowiedni znak!");
                     }
-
+                } catch (BadLoginOrPasswordExcepetion e) {
+                    System.out.println(e.getMessage());
+                }
 
             } while(!skip);
 
