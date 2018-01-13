@@ -1,8 +1,7 @@
 package controller;
 
-import exception.BadLoginOrPasswordExcepetion;
+import model.Answer;
 import model.Forum;
-import model.Thread;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,14 +20,14 @@ class StorageControllerTest {
 
         ForumController forumController = new ForumController(forum, securityController.getUser());
         forumController.addThread("Złota Płka 2017", "To jest dramat!");
-        forumController.getThread(0);
-        forumController.addAnswer("Nie jest");
-        forumController.addAnswer("Jest");
-        forumController.deleteAnswer(0);
+        forumController.goToThread(0);
+        forumController.getCurrentThread().addAnswer(new Answer(forumController.getLoggedUser(), "Nie jest"));
+        forumController.getCurrentThread().addAnswer(new Answer(forumController.getLoggedUser(), "Jest"));
+        forumController.getCurrentThread().deleteAnswer(0);
         forumController.addThread("Złota Płka 2018", "Będzie moja!");
-        forumController.getThread(1);
-        forumController.addAnswer("Zobaczycie!");
-        forumController.addAnswer("I sie zdziwicie!");
+        forumController.goToThread(1);
+        forumController.getCurrentThread().addAnswer(new Answer(forumController.getLoggedUser(), "Zobaczycie!"));
+        forumController.getCurrentThread().addAnswer(new Answer(forumController.getLoggedUser(), "I sie zdziwicie!"));
     }
 
     @Test

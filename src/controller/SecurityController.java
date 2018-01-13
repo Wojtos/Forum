@@ -44,26 +44,14 @@ public class SecurityController {
 
     }
 
-    public Boolean logIn(String nick, String password) throws BadLoginOrPasswordExcepetion {
+    public User logIn(String nick, String password) throws BadLoginOrPasswordExcepetion {
         User user = this.forum.getUserByNick(nick);
         if (user == null || !user.logIn(password)) throw new BadLoginOrPasswordExcepetion();
         else this.user = user;
-        return true;
+        return this.user;
     }
 
-    public Boolean changePassword(String oldPassword, String newPassword) {
-        return this.user.changePassword(oldPassword, newPassword);
-    }
-
-    public Boolean isLoggedIn() {
-        return this.user != null;
-    }
-
-    public Boolean isItAdministrator() {
-        return this.user instanceof Administrator;
-    }
-
-    protected User getUser(){ return this.user; }
+    public User getUser(){ return this.user; }
 
 
 }

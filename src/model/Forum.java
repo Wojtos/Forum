@@ -62,7 +62,8 @@ public class Forum implements Serializable {
         int counter = 0;
         for (Thread thread : threads) {
             System.out.println("Wątek nr." + counter );
-            thread.printThread();
+            System.out.println("Wątek o nazwie: " + thread.getName() + ", stworzony przez: " +
+            thread.getUser().getNick());
             counter++;
         }
         System.out.println("");

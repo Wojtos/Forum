@@ -6,6 +6,7 @@ import model.Forum;
 import model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,10 +23,10 @@ class SecurityControllerTest {
     @Test
     void logAdmin(){
         SecurityController sc = new SecurityController(new Forum());
+        User user;
         try {
-            assertTrue(sc.logIn("admin","admin"));
-            assertTrue(sc.isLoggedIn());
-            assertTrue(sc.getUser() instanceof Administrator);
+            assertNotNull(user = sc.logIn("admin","admin"));
+            assertTrue(user.isItAdministrator());
         } catch (BadLoginOrPasswordExcepetion e) {
             e.printStackTrace();
         }
@@ -35,10 +36,10 @@ class SecurityControllerTest {
     void addAndLogUser(){
         SecurityController sc = new SecurityController(new Forum());
         sc.register("a","b");
+        User user;
         try {
-            assertTrue(sc.logIn("a","b"));
-            assertTrue(sc.isLoggedIn());
-            assertFalse(sc.getUser() instanceof Administrator);
+            assertNotNull(user = sc.logIn("a","b"));
+            assertFalse(user.isItAdministrator());
 
         } catch (BadLoginOrPasswordExcepetion e) {
             e.printStackTrace();
@@ -49,12 +50,15 @@ class SecurityControllerTest {
     void logUser(){
         SecurityController sc = new SecurityController(new Forum());
         sc.register("a","b");
+        User user1;
+        User user2;
+        User user3;
         try {
-            assertTrue(sc.logIn("admin","admin"));
-            assertTrue(sc.getUser().getNick().equals("admin"));
-            assertTrue(sc.logIn("a","b"));
-            assertTrue(sc.getUser().getNick().equals("a"));
-            assertFalse(sc.logIn("a","bledne"));
+            assertNotNull(user1 = sc.logIn("admin","admin"));
+            assertTrue(user1.getNick().equals("admin"));
+            assertNotNull(user2 = sc.logIn("a","b"));
+            assertTrue(user2.getNick().equals("a"));
+            assertThrows(BadLoginOrPasswordExcepetion.class, (Executable) (user3 = sc.logIn("a","bledne")));
         } catch (BadLoginOrPasswordExcepetion e) {
             e.printStackTrace();
         }

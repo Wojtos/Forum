@@ -28,5 +28,9 @@ public class User implements Serializable {
         return true;
     }
 
+    public Boolean isItAdministrator() {
+        return this instanceof Administrator;
+    }
+
 
 }

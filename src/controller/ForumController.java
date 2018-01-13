@@ -24,44 +24,22 @@ public class ForumController {
         return this.forum.addThread(thread);
     }
 
-    public Boolean addAnswer(String description) {
-        if (this.currentThread == null) return false;
-        Answer answer = new Answer(loggedUser, description);
-        return this.currentThread.addAnswer(answer);
-    }
 
-    public Boolean deleteThread(int number) throws IndexOutOfBoundsException{
-        if (!(loggedUser instanceof Administrator)) return false;
-        this.forum.deleteThread(number);
-        return true;
-    }
-
-    public int getNumberOfThreads() {
-        return this.forum.getThreads().size();
-    }
-
-    public int getNumberOfAnswers() {
-        return this.currentThread.getAnswers().size();
-    }
-
-    public Boolean getThread(int number) throws IndexOutOfBoundsException {
+    public Thread goToThread(int number) throws IndexOutOfBoundsException {
         this.currentThread = this.forum.getThread(number);
-        return true;
+        return this.currentThread;
     }
 
-    public Boolean deleteAnswer(int number) throws IndexOutOfBoundsException{
-        return this.currentThread.deleteAnswer(number);
+
+    public Forum getForum() {
+        return this.forum;
     }
 
-    public void printForum() {
-        this.forum.printForum();
+    public User getLoggedUser() {
+        return this.loggedUser;
     }
 
-    public void printThread() {
-        this.currentThread.printThread();
-    }
-
-    public Boolean isUserAdministrator() {
-        return this.loggedUser instanceof Administrator;
+    public Thread getCurrentThread() {
+        return this.currentThread;
     }
 }

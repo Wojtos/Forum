@@ -2,7 +2,10 @@ package view;
 
 import controller.ForumController;
 import exception.BadLoginOrPasswordExcepetion;
+import model.Answer;
+import model.Forum;
 import model.Thread;
+import model.User;
 
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -13,6 +16,7 @@ import java.util.Scanner;
 public class Home {
     private ForumController forumController;
 
+
     public Home(ForumController forumController) {
         this.forumController = forumController;
     }
@@ -21,20 +25,21 @@ public class Home {
         Scanner in = new Scanner(System.in);
         boolean continueView;
         do {
-            this.forumController.printForum();
-            int numberOfThreads = this.forumController.getNumberOfThreads();
-            for (int i = 0; i < numberOfThreads; i++) {
-                System.out.println("Naciśnij " + i  +", aby wejść do wątku nr." + i);
+            this.forumController.getForum().printForum();
+            LinkedList<Thread> threads = this.forumController.getForum().getThreads();
+            int i = 0;
+            for (Thread thread : threads) {
+                System.out.println("Naciśnij " + i  +", aby wejść do wątku nr." + i + " o nazwie: " + thread.getName());
+                i++;
             }
-            System.out.println("Naciśnij D, aby się dodać wątek!");
-            if (this.forumController.isUserAdministrator())
+            System.out.println("Naciśnij D, aby dodać wątek!");
+            if (this.forumController.getLoggedUser().isItAdministrator())
                 System.out.println("Naciśnij U, aby przejść do usuwania wątków!");
             System.out.println("Naciśnij Q, aby wyjść!");
 
             String inputChar;
             int numberOfThread;
-            String nameOfThread;
-            String descriptionOfThread;
+
 
             continueView = true;
 
@@ -43,20 +48,18 @@ public class Home {
                 inputChar = in.nextLine();
                 if (inputChar.equals("Q") || inputChar.equals("q")) {
                     return false;
-                } else if (this.forumController.isUserAdministrator() &&
+                } else if (this.forumController.getLoggedUser().isItAdministrator() &&
                         (inputChar.equals("U") || inputChar.equals("u"))) {
-                    continueView = this.deleteThreadView();
+                    DeleteThreadView deleteThreadView = new DeleteThreadView(forumController, in);
+                    if (!deleteThreadView.deleteThreadView()) return false;
                 } else if (inputChar.equals("D") || inputChar.equals("d")) {
-                    System.out.println("Wpisz nazwę wątku!");
-                    nameOfThread = in.nextLine();
-                    System.out.println("Wpisz opis wątku!");
-                    descriptionOfThread = in.nextLine();
-                    this.forumController.addThread(nameOfThread, descriptionOfThread);
-                    System.out.println("Dodano wątek!");
+                    AddThreadView addThreadView = new AddThreadView(forumController, in);
+                    addThreadView.addThreadView();
                 } else {
                     numberOfThread = Integer.parseInt(inputChar);
-                    this.forumController.getThread(numberOfThread);
-                    continueView = this.threadView();
+                    this.forumController.goToThread(numberOfThread);
+                    ThreadView threadView = new ThreadView(this.forumController, in);
+                    if (!threadView.threadView()) return false;
 
                 }
             } catch (NumberFormatException e) {
@@ -70,93 +73,5 @@ public class Home {
         return false;
 
     }
-
-    public boolean threadView() {
-        Scanner in = new Scanner(System.in);
-        do {
-            this.forumController.printThread();
-
-            int numberOfAnswers = this.forumController.getNumberOfAnswers();
-            System.out.println("Naciśnij A, aby dodać opowiedź!");
-            if (this.forumController.isUserAdministrator()) {
-                for (int i = 0; i < numberOfAnswers; i++) {
-                    System.out.println("Naciśnij " + i + ", aby usunąć odpowiedź nr." + i);
-                }
-            }
-            System.out.println("Naciśnij B, aby się cofnąć!");
-            System.out.println("Naciśnij Q, aby wyjść!");
-
-
-            String inputChar;
-            int numberOfAnswer;
-            String descriptionOfAnswer;
-
-            try {
-
-                inputChar = in.nextLine();
-                if (inputChar.equals("Q") || inputChar.equals("q")) {
-                    return false;
-                } else if (inputChar.equals("B") || inputChar.equals("b")) {
-                    return true;
-                } else if (inputChar.equals("A") || inputChar.equals("a")) {
-                    System.out.println("Wpisz odpowiedz!");
-                    descriptionOfAnswer = in.nextLine();
-                    this.forumController.addAnswer(descriptionOfAnswer);
-                    System.out.println("Dodano odpowiedz!");
-                } else if (this.forumController.isUserAdministrator()) {
-                    numberOfAnswer = Integer.parseInt(inputChar);
-                    this.forumController.deleteAnswer(numberOfAnswer);
-                    System.out.println("Usunieto odpowiedz!");
-
-                } else {
-                    System.out.println("Wpisz odpowiedni znak!");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Wpisz odpowiedni znak!");
-            } catch (IndexOutOfBoundsException e) {
-                System.out.println("Nie ma takiego wątku!");
-            }
-
-        } while(true);
-
-    }
-
-
-    public boolean deleteThreadView() {
-        Scanner in = new Scanner(System.in);
-        do {
-            int numberOfThreads = this.forumController.getNumberOfThreads();
-            for (int i = 0; i < numberOfThreads; i++) {
-                System.out.println("Naciśnij " + i  +", aby usunąć wątek nr." + i);
-            }
-            System.out.println("Naciśnij B, aby się cofnąć!");
-            System.out.println("Naciśnij Q, aby wyjść!");
-
-            String inputChar;
-            int numberOfThread;
-
-            try {
-
-                inputChar = in.nextLine();
-                if (inputChar.equals("Q") || inputChar.equals("q")) {
-                    return false;
-                } else if (inputChar.equals("B") || inputChar.equals("b")) {
-                    return true;
-                }  else {
-                    numberOfThread = Integer.parseInt(inputChar);
-                    this.forumController.deleteThread(numberOfThread);
-                    System.out.println("Wątek usunięto!");
-                    return true;
-
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Wpisz odpowiedni znak!");
-            } catch (IndexOutOfBoundsException e) {
-                System.out.println("Nie ma takiej odpowiedzi!");
-            }
-
-        } while(true);
-    }
-
 
 }

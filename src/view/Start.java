@@ -20,7 +20,7 @@ import java.util.*;
  * Created by wojtek on 06.01.18.
  */
 public class Start {
-    SecurityController securityController;
+    private SecurityController securityController;
 
     public Start(SecurityController securityController) {
         this.securityController = securityController;
@@ -37,29 +37,17 @@ public class Start {
             System.out.println("Naciśnij R, aby się zarejestrować!");
             System.out.println("Naciśnij Q, aby wyjść!");
 
-            String inputChar;
-            String nick;
-            String password;
+            String inputChar;;
 
             try {
 
                 inputChar = in.nextLine();
                 if (inputChar.equals("L") || inputChar.equals("l")) {
-                    System.out.println("Wpisz nick!");
-                    nick = in.nextLine();
-                    System.out.println("Wpisz hasło!");
-                    password = in.nextLine();
-                    this.securityController.logIn(nick, password);
+                    LogIn login = new LogIn(securityController, in);
+                    login.login();
                 } else if (inputChar.equals("R") || inputChar.equals("r")) {
-                    System.out.println("Wpisz nick!");
-                    nick = in.nextLine();
-                    System.out.println("Wpisz hasło!");
-                    password = in.nextLine();
-                    if (this.securityController.register(nick, password)) {
-                        this.securityController.logIn(nick, password);
-                    } else {
-                        System.out.println("Nick zajęty!");
-                    }
+                    Register register = new Register(securityController, in);
+                    register.register();
                 } else if (inputChar.equals("Q") || inputChar.equals("q")) {
                     return false;
                 } else {
@@ -69,76 +57,10 @@ public class Start {
                 System.out.println(e.getMessage());
             }
 
-        } while(!this.securityController.isLoggedIn());
+        } while(this.securityController.getUser() == null);
 
-        System.out.println("Zalogowano!");
-            System.out.println("Jesteś administratorem!");
-            boolean skip;
-            do {
-                if (this.securityController.isItAdministrator()) {
-                    System.out.println("Naciśnij R, aby zarejestrować nowego administratora!");
-                    System.out.println("Naciśnij Z, aby zmienić hasło innemu użytkowinikowi!");
-
-                }
-                System.out.println("Naciśnij C, aby zmienić hasło!");
-                System.out.println("Naciśnij L, aby przejść dalej!");
-                System.out.println("Naciśnij Q, aby się wyjść!");
-
-
-                String inputChar;
-                String nick;
-                String password;
-                String newPassword;
-                String oldPassword;
-                skip = false;
-
-
-
-                try {
-                    inputChar = in.nextLine();
-                    if (inputChar.equals("L") || inputChar.equals("l")) {
-                        skip = true;
-                    } else if (this.securityController.isItAdministrator() &&
-                            (inputChar.equals("R") || inputChar.equals("r"))) {
-                        System.out.println("Wpisz nick!");
-                        nick = in.nextLine();
-                        System.out.println("Wpisz hasło!");
-                        password = in.nextLine();
-                        if (this.securityController.registerAdministrator(nick, password)) {
-                            System.out.println("Zarejestrowano!");
-                        } else {
-                            System.out.println("Nick zajęty!");
-                        }
-                    } else if (this.securityController.isItAdministrator() &&
-                            (inputChar.equals("Z") || inputChar.equals("z"))) {
-                        System.out.println("Wpisz nick użytkownika, któremu chesz zmienić hasło!");
-                        nick = in.nextLine();
-                        System.out.println("Wpisz nowe hasło!");
-                        password = in.nextLine();
-                        this.securityController.changeUserPassword(nick, password);
-                        System.out.println("Zmieniono!");
-                    } else if (inputChar.equals("C") || inputChar.equals("c")) {
-                        System.out.println("Wpisz stare hasło!");
-                        oldPassword = in.nextLine();
-                        System.out.println("Wpisz nowe hasło!");
-                        newPassword = in.nextLine();
-                        if (this.securityController.changePassword(oldPassword, newPassword)) {
-                            System.out.println("Hasło zmienione!");
-                        } else {
-                            System.out.println("Złe stare hasło!");
-                        }
-                    } else if (inputChar.equals("Q") || inputChar.equals("q")) {
-                        return false;
-                    } else {
-                        System.out.println("Wpisz odpowiedni znak!");
-                    }
-                } catch (BadLoginOrPasswordExcepetion e) {
-                    System.out.println(e.getMessage());
-                }
-
-            } while(!skip);
-
-            return true;
+        Logged logged = new Logged(securityController, in);
+        return logged.logged();
         }
 
 
